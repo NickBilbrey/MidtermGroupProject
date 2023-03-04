@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace MidTermGroupProject
 {
-    public class Payment
+    public abstract class Payment // Abstract parent class of the payment methods
     {
-        public void Credit()
-        { }
-        public void Cash()
-        { }
-        public void Check()
-        { }
-        public void GetTotal()
-        { }
+        public decimal Subtotal { get; set; } // Every payment method must return both Subtotal, Sales Tax, and Total
+        public decimal Total { get; set; }
+        public decimal SalesTax { get; set; }
+        public abstract decimal GetTotal(); // A Method to be overrided and changed based on the necessary return & Parameters
+
     }
+    
 }
