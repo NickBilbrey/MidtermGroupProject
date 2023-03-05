@@ -11,7 +11,7 @@ namespace MidTermGroupProject
         public decimal Subtotal { get; set; } // Every payment method must return both Subtotal, Sales Tax, and Total
         public decimal Total { get; set; }
         public decimal SalesTax { get; set; }
-        public abstract decimal GetTotal(); // A Method to be overrided and changed based on the necessary return & Parameters
+        //public abstract decimal GetTotal(); // A Method to be overrided and changed based on the necessary return & Parameters
 
     }
     

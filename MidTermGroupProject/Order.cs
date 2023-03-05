@@ -13,7 +13,7 @@ namespace MidTermGroupProject
             public int Quantity;
             public decimal LineTotal
             {
-            //This will return the price of the product multiplying it by quantity
+            //This will return the price of the product multiplyin
                 get { return Product.Price * Quantity; }
             }
 

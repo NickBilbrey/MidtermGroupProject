@@ -8,10 +8,10 @@ namespace MidTermGroupProject
 {
     public class Credit : Payment
     {
-        public string CreditCardNumber { get; set; }
-        public string ExperationDate { get; set; }
+        public long CreditCardNumber { get; set; }
+        public int ExperationDate { get; set; }
         public int CVV { get; set; }
-        public Credit(string creditCardNumber, string experationDate, int cVV) // constructs and sets all the credit card info to be returned later
+        public Credit(long creditCardNumber, int experationDate, int cVV) // constructs and sets all the credit card info to be returned later
         {
             CreditCardNumber= creditCardNumber;
             ExperationDate= experationDate;
