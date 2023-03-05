@@ -1,37 +1,75 @@
 ﻿using MidTermGroupProject;
+using System.Security.Cryptography.X509Certificates;
 
 public class TakeOrders
 {
     static List<Product> products = new List<Product>();
     static List<Order> orders = new List<Order>();
-    static decimal salesTaxRate = 0.07m;
+    static Cart cart = new Cart();
+    static decimal salesTax;
+    static Payment payment;
+    static Cash cash;
+    static Check check;
+    static Credit credit;
+
+    public static void displayProductList()
+    {
+        for (int i = 0; i < products.Count; i++)
+        {
+            Console.WriteLine("{0}. {1} ({2}) - {3:C}", i + 1, products[i].Name, products[i].Category, products[i].Price);
+        }
+
+    }
+
 
     static void Main(string[] args)
     {
+        Cart cart = new Cart();
+        decimal totalTax = cart.GetSalesTax();
+
         // Populate the product list
-        products.Add(new Product("Coffee", "Beverage", "Regular coffee", 2.00m));
-        products.Add(new Product("Latte", "Beverage", "Espresso with steamed milk", 3.50m));
-        products.Add(new Product("Cappuccino", "Beverage", "Espresso with frothed milk", 3.50m));
-        products.Add(new Product("Muffin", "Pastry", "Blueberry muffin", 2.50m));
-        products.Add(new Product("Croissant", "Pastry", "Buttery croissant", 2.00m));
-        products.Add(new Product("Bagel", "Pastry", "Plain bagel with cream cheese", 2.50m));
-        products.Add(new Product("Breakfast Sandwich", "Food", "Egg and cheese on a croissant", 4.50m));
-        products.Add(new Product("BLT Sandwich", "Food", "Bacon, lettuce, and tomato on toast", 5.50m));
-        products.Add(new Product("Soup of the Day", "Food", "Chef's special soup", 4.00m));
-        products.Add(new Product("Salad", "Food", "Mixed greens with balsamic vinaigrette", 5.00m));
-        products.Add(new Product("Fruit Cup", "Food", "Assorted seasonal fruit", 3.50m));
-        products.Add(new Product("Yogurt Parfait", "Food", "Greek yogurt with granola and berries", 4.50m));
+        products.Add(new Product("Coffee", "Beverage", "Regular coffee", 2.00m, 0));
+        products.Add(new Product("Latte", "Beverage", "Espresso with steamed milk", 3.50m, 0));
+        products.Add(new Product("Cappuccino", "Beverage", "Espresso with frothed milk", 3.50m, 0));
+        products.Add(new Product("Muffin", "Pastry", "Blueberry muffin", 2.50m, 0));
+        products.Add(new Product("Croissant", "Pastry", "Buttery croissant", 2.00m, 0));
+        products.Add(new Product("Bagel", "Pastry", "Plain bagel with cream cheese", 2.50m, 0));
+        products.Add(new Product("Breakfast Sandwich", "Food", "Egg and cheese on a croissant", 4.50m, 0));
+        products.Add(new Product("BLT Sandwich", "Food", "Bacon, lettuce, and tomato on toast", 5.50m, 0));
+        products.Add(new Product("Soup of the Day", "Food", "Chef's special soup", 4.00m, 0));
+        products.Add(new Product("Salad", "Food", "Mixed greens with balsamic vinaigrette", 5.00m, 0));
+        products.Add(new Product("Fruit Cup", "Food", "Assorted seasonal fruit", 3.50m, 0));
+        products.Add(new Product("Yogurt Parfait", "Food", "Greek yogurt with granola and berries", 4.50m, 0));
+
+        ////while (true)
+        ////{
+
+        ////    //Console.Clear();
+        Console.WindowWidth = 50;
+        Console.WindowHeight = 25;
+
+        Random rand = new Random();
 
         while (true)
         {
-            Console.Clear();
-            Console.WriteLine("Welcome to the coffee shop! Please select an item:");
-
-            // Display the product list
-            for (int i = 0; i < products.Count; i++)
+            for (int i = 0; i < Console.WindowWidth; i++)
             {
-                Console.WriteLine("{0}. {1} ({2}) - {3:C}", i + 1, products[i].Name, products[i].Category, products[i].Price);
+                int height = rand.Next(Console.WindowHeight);
+                Console.SetCursorPosition(i, height);
+                Console.Write("*");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Thread.Sleep(40);
             }
+
+            Console.Clear();
+            Console.BackgroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("****************** Welcome to the AJN coffee shop! Please select an item*****************:");
+            Thread.Sleep(1000);
+            Console.BackgroundColor = ConsoleColor.Gray;
+
+
+            displayProductList();
 
             Console.WriteLine("{0}. Complete order", products.Count + 1);
             Console.WriteLine();
@@ -49,20 +87,27 @@ public class TakeOrders
                     string quantityString = Console.ReadLine();
                     if (int.TryParse(quantityString, out int quantity) && quantity > 0)
                     {
+                        products[productIndex - 1].Quantity = quantity;
+                        Console.WriteLine("testing if condition *******");
                         // Add the order to the List
-                        orders.Add(new Order(products[productIndex - 1], quantity));
-                        Console.WriteLine("Added {0} x {1} to order", quantity, products);
-                    }
-                    // Calculate the line total check ths
-                    decimal lineTotal = products[productIndex - 1].Price * quantity;
+                        orders.Add(new Order(products[productIndex - 1], products[productIndex - 1].Quantity));
+                        cart.AddItem(products[productIndex - 1], quantity);
+                        Console.WriteLine("Added {0} {1} to order", quantity, products[productIndex - 1].getProductName());
 
-                    // Print the line total
-                    Console.WriteLine($"Line total: ${lineTotal}");
+                    }
+
+                    static void ViewProducts()
+                    {
+                        Console.WriteLine("Products:");
+                        for (int i = 0; i < products.Count; i++)
+                        {
+                            Console.WriteLine("{0}. {1} - {2} ({3:c})", i + 1, products[i].Name, products[i].Category, products[i].Price);
+                        }
+                    }
 
                     // Ask the user if they want to continue shopping or complete the purchase
                     Console.Write("Continue shopping? (Y/N): ");
                     string continueShopping = Console.ReadLine().ToUpper();
-
                     if (continueShopping == "N")
                     {
                         // Calculate the subtotal
@@ -71,12 +116,17 @@ public class TakeOrders
                         {
                             subtotal += products[i].Price;
                         }
+                        Console.WriteLine("1. Cash");
+                        Console.WriteLine("2. Credit");
+                        Console.WriteLine("3. Check");
+                        // Calculate the line total check ths
+                        decimal lineTotal = products[productIndex - 1].Price * quantity;
 
-                        // Calculate the sales tax
-                        decimal salesTax = Math.Round(subtotal * salesTaxRate, 2);
+                        // Print the line total
 
-                        // Calculate the grand total
-                        decimal grandTotal = Math.Round(subtotal + salesTax, 2);
+                        Console.WriteLine($"Line total: ${lineTotal}");
+                        decimal grandTotal = lineTotal + totalTax;
+                        Console.WriteLine($"grand total: ${grandTotal}");
 
                         // Ask the user for the payment type
                         Console.Write("Enter payment type (Cash/Credit/Check): ");
@@ -92,23 +142,26 @@ public class TakeOrders
                             // Calculate the change
                             decimal change = amountTendered - grandTotal;
 
-                            // Print the receipt
+                            //Print the receipt
                             Console.WriteLine("Receipt:");
                             for (int i = 0; i < products.Count; i++)
                             {
                                 Console.WriteLine($"{products[i].Name} - ${products[i].Price}");
                             }
+                            Console.ForegroundColor = ConsoleColor.Blue;
                             Console.WriteLine($"Subtotal: ${subtotal}");
                             Console.WriteLine($"Sales Tax: ${salesTax}");
                             Console.WriteLine($"Grand Total: ${grandTotal}");
                             Console.WriteLine($"Payment Type: Cash");
                             Console.WriteLine($"Amount Tendered: ${amountTendered}");
                             Console.WriteLine($"Change: ${change}");
+                            Console.ResetColor();
                         }
-                        // Handle check payment
+                        //Handle check payment
                         else if (paymentType == "CHECK")
                         {
-                            // Ask the user for the check number
+                            //Ask the user for the check number
+
                             Console.Write("Enter check number: ");
                             string checkNumber = Console.ReadLine();
 
