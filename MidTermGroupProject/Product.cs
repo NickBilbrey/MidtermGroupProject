@@ -12,13 +12,19 @@ namespace MidTermGroupProject
         public string Category { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
+        public int Quantity { get; set; }
 
-        public Product (string name, string category, string description, decimal price)
+        public Product (string name, string category, string description, decimal price, int quantity)
         {
             Name = name;
             Category = category;
             Description = description;
             Price = price;
+            Quantity = quantity;    
+        }
+
+        public string getProductName() {
+            return Name;
         }
     }
 }
