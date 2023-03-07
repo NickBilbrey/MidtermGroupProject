@@ -11,16 +11,18 @@ namespace MidTermGroupProject
     {       
             public Product Product;
             public int Quantity;
+            public string Name;
             public decimal LineTotal
             {
             //This will return the price of the product multiplyin
                 get { return Product.Price * Quantity; }
             }
-
-            public Order(Product product, int quantity)
+          
+            public Order(Product product, int quantity, string name)
             {
                 Product = product;
                 Quantity = quantity;
+                Name = name;
             }
         }
     }
