@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 
 public class TakeOrders
 {
-    static List<Product> products = new List<Product>();
+   
+
+
     static List<Order> orders = new List<Order>();
     static decimal salesTaxRate = 0.07m;
     static Payment payment;
@@ -14,34 +16,14 @@ public class TakeOrders
     static Check check;
     static Credit credit;
 
-    public static void displayProductList()
-    {
-        for (int i = 0; i < products.Count; i++)
-        {
-            Console.WriteLine("{0}. {1} ({2}) - {3:C}", i + 1, products[i].Name, products[i].Category, products[i].Price);
-        }
-
-    }
+    
 
     static void Main(string[] args)
     {
+        Menu menu = new Menu();
         Cart cart = new Cart();
+        List<Product> products = menu.Items;
         decimal totalTax = cart.GetSalesTax();
-
-        // Populate the product list
-        products.Add(new Product("Coffee", "Beverage", "Regular coffee", 2.00m, 0));
-        products.Add(new Product("Latte", "Beverage", "Espresso with steamed milk", 3.50m, 0));
-        products.Add(new Product("Cappuccino", "Beverage", "Espresso with frothed milk", 3.50m, 0));
-        products.Add(new Product("Muffin", "Pastry", "Blueberry muffin", 2.50m, 0));
-        products.Add(new Product("Croissant", "Pastry", "Buttery croissant", 2.00m, 0));
-        products.Add(new Product("Bagel", "Pastry", "Plain bagel with cream cheese", 2.50m, 0));
-        products.Add(new Product("Breakfast Sandwich", "Food", "Egg and cheese on a croissant", 4.50m, 0));
-        products.Add(new Product("BLT Sandwich", "Food", "Bacon, lettuce, and tomato on toast", 5.50m, 0));
-        products.Add(new Product("Soup of the Day", "Food", "Chef's special soup", 4.00m, 0));
-        products.Add(new Product("Salad", "Food", "Mixed greens with balsamic vinaigrette", 5.00m, 0));
-        products.Add(new Product("Fruit Cup", "Food", "Assorted seasonal fruit", 3.50m, 0));
-        products.Add(new Product("Yogurt Parfait", "Food", "Greek yogurt with granola and berries", 4.50m, 0));
-
         bool done = false;
         decimal subtotal = 0;
         int cntr = 0;
@@ -72,7 +54,7 @@ public class TakeOrders
             if (cntr == 0 || cntr == 3)
             {
                 Console.Clear();
-                displayProductList();
+                menu.DisplayProductList(); 
                 cntr = 1;
             }
 
@@ -147,15 +129,14 @@ public class TakeOrders
                                 amountTendered = decimal.Parse(Console.ReadLine());
                                 if (amountTendered < grandTotal)
                                 {
-                                    Console.WriteLine("plz give the full amount you owe. plz re-try");
-                                    break;
-                                    //fullAmount = true;
+                                    Console.WriteLine("please give the full amount you owe.");
+                                    fullAmount = true;
                                 }
                                 else
                                 {
-                                    continue;
+                                    fullAmount = false;
                                 }
-                            } while (false); ;
+                            } while (fullAmount == false);
 
 
                             decimal change = amountTendered - grandTotal;
