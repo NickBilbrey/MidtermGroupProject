@@ -1,6 +1,7 @@
 ﻿using MidTermGroupProject;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
@@ -13,6 +14,7 @@ public class TakeOrders
     static Cash cash;
     static Check check;
     static Credit credit;
+    
 
     public static void displayProductList()
     {
@@ -27,6 +29,10 @@ public class TakeOrders
     {
         Cart cart = new Cart();
         decimal totalTax = cart.GetSalesTax();
+        string path = string.Empty;
+
+        
+
 
         // Populate the product list
         products.Add(new Product("Coffee", "Beverage", "Regular coffee", 2.00m, 0));
@@ -41,6 +47,30 @@ public class TakeOrders
         products.Add(new Product("Salad", "Food", "Mixed greens with balsamic vinaigrette", 5.00m, 0));
         products.Add(new Product("Fruit Cup", "Food", "Assorted seasonal fruit", 3.50m, 0));
         products.Add(new Product("Yogurt Parfait", "Food", "Greek yogurt with granola and berries", 4.50m, 0));
+
+        if (!File.Exists(path))
+        {
+            // Create a file to write to.
+            using (StreamWriter sw = File.CreateText(@"C:\Temp\sample.txt"))
+            {
+                foreach (Product prod in products)
+                {
+                    sw.WriteLine($"{prod.Name},{prod.Category},{prod.Description},{prod.Price}");
+                }               
+
+            }
+        }
+
+        // Open the file to read from.
+        using (StreamReader sr = File.OpenText(@"C:\Temp\sample.txt"))
+        {
+            string s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                Console.WriteLine(s);
+            }
+        }
+
 
         bool done = false;
         decimal subtotal = 0;
@@ -224,3 +254,4 @@ public class TakeOrders
         Console.WriteLine("Thank you for shopping with us!");;
     }
     }
+
