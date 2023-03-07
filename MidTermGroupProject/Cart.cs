@@ -18,7 +18,7 @@ namespace MidTermGroupProject
         public decimal GetSalesTax()
         {           
 
-            decimal taxRate = 0.06m;           
+           decimal taxRate = 0.06m;           
 
             return taxRate;
         }
