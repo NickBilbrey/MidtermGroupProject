@@ -6,15 +6,8 @@ using System.Threading.Tasks;
 
 namespace MidTermGroupProject
 {
-    public class Cart
+    public class Cart:Menu
     {
-        public List<Product> Items = new List<Product>();
-
-        public void AddItem(Product product, int quantity)
-        {
-            Items.Add(product);            
-        }
-        
         public decimal GetSalesTax()
         {           
 
@@ -26,6 +19,10 @@ namespace MidTermGroupProject
         public void Clear()
         {
             Items.Clear();
+        }
+        public void AddItem(Product product, int quantity)
+        {
+            Items.Add(product);
         }
     }
 }
