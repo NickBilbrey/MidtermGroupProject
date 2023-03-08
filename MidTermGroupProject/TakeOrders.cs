@@ -71,14 +71,14 @@ public class TakeOrders
                 if (productIndex >= 1 && productIndex <= products.Count)
                 {
                     // Get the quantity
-                    Console.Write("How much is the quantity of the product you want ");
+                    Console.Write("How many " + products[productIndex - 1].getProductName() + " would you like? "); 
                     string quantityString = Console.ReadLine();
                     if (int.TryParse(quantityString, out int quantity) && quantity > 0)
                     {
                         products[productIndex - 1].Quantity = quantity;
                       //  Console.WriteLine("testing if condition *******");
                         // Add the order to the List
-                        orders.Add(new Order(products[productIndex - 1], products[productIndex - 1].Quantity));
+                        orders.Add(new Order(products[productIndex - 1], products[productIndex - 1].Quantity, products[productIndex - 1].getProductName()));
                         cart.AddItem(products[productIndex - 1], quantity);
                         Console.WriteLine("Added {0} {1} to order", quantity, products[productIndex - 1].getProductName());
 
@@ -98,6 +98,18 @@ public class TakeOrders
                         decimal amountTendered;
                         decimal salesTax = Math.Round(subtotal * salesTaxRate, 2);
                         decimal grandTotal = Math.Round(subtotal + salesTaxRate, 2);
+                        
+                        Console.WriteLine("Receipt:");
+                        
+                        foreach (var Order in orders) 
+                        {
+                           Console.WriteLine("{0} {1} ...... {2} ", Order.Quantity, Order.Name, Order.LineTotal);
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine("Subtotal:    " + subtotal);
+                        Console.WriteLine("Sales Tax:   " + salesTax);
+                        Console.WriteLine("--------------------------");
+                        Console.WriteLine("Grand Total: " + grandTotal);
 
                         // Ask the user for the payment type
                         Console.Write("Enter payment type (Cash/Credit/Check): ");
@@ -124,23 +136,29 @@ public class TakeOrders
                                 {
                                     fullAmount = false;
                                 }
+<<<<<<< HEAD
                             } while (fullAmount == false);
+=======
+                            } while (fullAmount == true);
+>>>>>>> f5dbf1861d9ec7f00c5398b7d18ce97f248854be
 
 
                             decimal change = amountTendered - grandTotal;
                             //to do : add all the items that were ordered in receipt
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
+                          //  Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
                             Console.WriteLine();
                             Console.WriteLine("*********************");                            
-                            Console.WriteLine("your sales tax is: "+ salesTax);
+                          //  Console.WriteLine("your sales tax is: "+ salesTax);
                             Console.WriteLine($"Payment Type: Cash");
                             Console.WriteLine($"Amount Tendered: ${amountTendered}");
                             Console.WriteLine($"Change: ${change}");
-                            Console.WriteLine("your grand total is: " + grandTotal);
+                            Console.WriteLine();
+                            Console.WriteLine();
+                          //  Console.WriteLine("your grand total is: " + grandTotal);
                             Console.ResetColor();
                         }
-                        
+                         
                         //Handle check payment
                         else if (paymentType == "CHECK")
                         {
@@ -161,12 +179,12 @@ public class TakeOrders
                             }                            
                            
                             //Print the receipt                            
-                            Console.WriteLine("Plz collect your Receipt:");
+                        //    Console.WriteLine("Plz collect your Receipt:");
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
+                        //    Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
                             Console.WriteLine();
                             Console.WriteLine("*********************");
-                            Console.WriteLine("your sales tax is: " + salesTax);                            
+                          //  Console.WriteLine("your sales tax is: " + salesTax);                            
                             Console.WriteLine("your grand total is: " + grandTotal);
                             Console.ResetColor();
 
