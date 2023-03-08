@@ -136,7 +136,7 @@ public class TakeOrders
                                 {
                                     fullAmount = false;
                                 }
-                            } while (fullAmount == false);
+                            } while (fullAmount == true);
 
 
                             decimal change = amountTendered - grandTotal;
