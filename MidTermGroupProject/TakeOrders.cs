@@ -204,37 +204,29 @@ public class TakeOrders
 
                         else if (paymentType == "CREDIT")
                         {
-                            // Get credit card number
-                            Console.Write("Enter your credit card number: ");
-                            string creditCardNumber = Console.ReadLine();
-
-                            bool isCreditCardValid = Regex.IsMatch(creditCardNumber, @"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]
-                                 {14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$");
-                            // Validate credit card number                                
+                            bool validEntry = false;
+                            do
                             {
-                                Console.WriteLine(isCreditCardValid);
+                                // Get credit card number
+                                Console.Write("Enter your credit card number: ");
+                                credit.CreditCardNumber = Console.ReadLine();
 
-                            }
+                                Console.Write("Enter your expiration date (MMYY): ");
+                                credit.ExpirationDate = Console.ReadLine();
 
-                            // Get expiration date
-                            Console.Write("Enter your expiration date (MMYY): ");
-                            string expirationDate = Console.ReadLine();
+                                Console.Write("Enter your CVV: ");
+                                credit.CVV = Console.ReadLine();
 
-                            bool isExpirationDateValid = Regex.IsMatch(expirationDate, @"^(0[1-9]|1[0-2])\/([0-9]{2})$");
-                            Console.WriteLine(isExpirationDateValid);
-
-                            // Get CVV
-                            Console.Write("Enter your CVV: ");
-                            string cvv = Console.ReadLine();
-
-                            bool isCVVValid = (Regex.IsMatch(cvv, @"^\d{3}$"));
-
-                            Console.WriteLine("valid security code number.");
-
-                            if (isCreditCardValid == true || isExpirationDateValid == true || isCVVValid == true)
-                            {
-                                Console.WriteLine("Payment processed successfully.");
-                            }
+                                if (credit.IsCardNumberValid() == true || credit.IsExpirationDateValid() == true || credit.IsCvvValid() == true)
+                                {
+                                    Console.WriteLine("Payment processed successfully.");
+                                    validEntry = true;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Please enter valid Credit Card Info");
+                                }
+                            } while (validEntry == false);
 
                             //Print the receipt                            
                             // Console.WriteLine("payment was successful. Plz collect your Receipt:");                            
