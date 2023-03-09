@@ -13,7 +13,7 @@ public class TakeOrders
     static decimal salesTaxRate = 0.07m;
     static Payment payment;
     static Cash cash;
-    static Check check;   
+    static Check check;
 
 
     static void Main(string[] args)
@@ -24,35 +24,12 @@ public class TakeOrders
         decimal totalTax = cart.GetSalesTax();
         bool done = false;
         decimal subtotal = 0;
-        int cntr = 0;
-        string path = string.Empty;
+        int cntr = 0;        
         Credit credit = new Credit();
+        string choice;
 
 
-        if (!File.Exists(path))
-        {
-            // Create a file to write to.
-            using (StreamWriter sw = File.CreateText(@"C:\Temp\menu.txt"))
-            {
-                foreach (Product prod in products)
-                {                    
-                    sw.WriteLine($"{prod.Name},'||',{prod.Category},'||',{prod.Description},'||',{prod.Price},'||',{prod.Quantity}");
-                       
-                }
-
-            }
-        }
-
-        // Open the file to read from.
-        using (StreamReader sr = File.OpenText(@"C:\Temp\menu.txt"))
-        {
-            string s;
-            while ((s = sr.ReadLine()) != null)
-            {
-                Console.WriteLine(s);
-            }
-        }
-
+       
         Console.WindowWidth = 50;
         Console.WindowHeight = 25;
 
@@ -68,43 +45,52 @@ public class TakeOrders
             Console.BackgroundColor = ConsoleColor.Black;
             Thread.Sleep(40);
         }
-            Console.Clear();
-            Console.BackgroundColor = ConsoleColor.Cyan;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("****************** Welcome to the AJN coffee shop! Please select an item*****************:");
-            Thread.Sleep(1000);
-            Console.BackgroundColor = ConsoleColor.Gray;
-            // cntr++;
+        Console.Clear();
+        Console.BackgroundColor = ConsoleColor.Cyan;
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("****************** Welcome to the AJN coffee shop! Please select an item*****************:");
+        Thread.Sleep(1000);
+        Console.BackgroundColor = ConsoleColor.Gray;
+        // cntr++;
         do
-        { 
+        {
             if (cntr == 0 || cntr == 3)
             {
                 Console.Clear();
-                menu.DisplayProductList(); 
+                menu.DisplayProductList();
                 cntr = 1;
             }
 
             cntr++;
-            
+
             Console.WriteLine();
-
-            // Get the user's choice
-            Console.Write("Enter the product number you want: ");
-            string choice = Console.ReadLine();
-
+           
+                // Get the user's choice
+                Console.Write("Enter the product number you want: ");
+                choice = Console.ReadLine();
+           
             if (int.TryParse(choice, out int productIndex))
             {
+
+                if (productIndex >= 0 && productIndex < products.Count) {
+
+                    Console.WriteLine("product number is valid");
+                }else
+                {
+                    Console.WriteLine("product number is invalid plz re-try");
+
+                }
+
                 if (productIndex >= 1 && productIndex <= products.Count)
                 {
                     // Get the quantity
-                    Console.Write("How much is the quantity of the product you want ");
+                    Console.Write("How many " + products[productIndex - 1].getProductName() + " would you like? ");
                     string quantityString = Console.ReadLine();
                     if (int.TryParse(quantityString, out int quantity) && quantity > 0)
                     {
                         products[productIndex - 1].Quantity = quantity;
-                      //  Console.WriteLine("testing if condition *******");
                         // Add the order to the List
-                        orders.Add(new Order(products[productIndex - 1], products[productIndex - 1].Quantity));
+                        orders.Add(new Order(products[productIndex - 1], products[productIndex - 1].Quantity, products[productIndex - 1].getProductName()));
                         cart.AddItem(products[productIndex - 1], quantity);
                         Console.WriteLine("Added {0} {1} to order", quantity, products[productIndex - 1].getProductName());
 
@@ -113,7 +99,7 @@ public class TakeOrders
                     subtotal = subtotal + lineTotal;
 
                     Console.WriteLine($"Line total: ${lineTotal}");
-                    
+
                     // Ask the user if they want to continue shopping or complete the purchase
                     Console.Write("Continue shopping? (Y/N): ");
                     string continueShopping = Console.ReadLine().ToUpper();
@@ -124,6 +110,18 @@ public class TakeOrders
                         decimal amountTendered;
                         decimal salesTax = Math.Round(subtotal * salesTaxRate, 2);
                         decimal grandTotal = Math.Round(subtotal + salesTaxRate, 2);
+
+                        Console.WriteLine("Receipt:");
+
+                        foreach (var Order in orders)
+                        {
+                            Console.WriteLine("{0} {1} ...... {2} ", Order.Quantity, Order.Name, Order.LineTotal);
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine("Subtotal:    " + subtotal);
+                        Console.WriteLine("Sales Tax:   " + salesTax);
+                        Console.WriteLine("--------------------------");
+                        Console.WriteLine("Grand Total: " + grandTotal);
 
                         // Ask the user for the payment type
                         Console.Write("Enter payment type (Cash/Credit/Check): ");
@@ -150,27 +148,30 @@ public class TakeOrders
                                 {
                                     fullAmount = false;
                                 }
-                            } while (fullAmount == false);
+                            } while (fullAmount == true);
 
 
                             decimal change = amountTendered - grandTotal;
                             //to do : add all the items that were ordered in receipt
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
+                            //  Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
                             Console.WriteLine();
                             Console.WriteLine("*********************");
-                            Console.WriteLine("your sales tax is: " + salesTax);
+                            //  Console.WriteLine("your sales tax is: "+ salesTax);
                             Console.WriteLine($"Payment Type: Cash");
                             Console.WriteLine($"Amount Tendered: ${amountTendered}");
                             Console.WriteLine($"Change: ${change}");
-                            Console.WriteLine("your grand total is: " + grandTotal);
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            //  Console.WriteLine("your grand total is: " + grandTotal);
                             Console.ResetColor();
                         }
 
                         //Handle check payment
                         else if (paymentType == "CHECK")
                         {
-                            try {
+                            try
+                            {
                                 //We used Regex expressions to validate the check number.if always 9 digits are required
 
                                 Console.Write("Please enter a check number. The number should be between 1 to 9 digits long: ");
@@ -192,12 +193,12 @@ public class TakeOrders
 
 
                             //Print the receipt                            
-                            Console.WriteLine("Plz collect your Receipt:");
+                            //    Console.WriteLine("Plz collect your Receipt:");
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
+                            //    Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
                             Console.WriteLine();
                             Console.WriteLine("*********************");
-                            Console.WriteLine("your sales tax is: " + salesTax);
+                            //  Console.WriteLine("your sales tax is: " + salesTax);                            
                             Console.WriteLine("your grand total is: " + grandTotal);
                             Console.ResetColor();
 
@@ -205,68 +206,68 @@ public class TakeOrders
 
                         else if (paymentType == "CREDIT")
                         {
-                             // Get credit card number
-                                Console.Write("Enter your credit card number: ");
-                                string creditCardNumber = Console.ReadLine();
+                            // Get credit card number
+                            Console.Write("Enter your credit card number: ");
+                            string creditCardNumber = Console.ReadLine();
 
-                                bool isCreditCardValid = Regex.IsMatch(creditCardNumber, @"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]
+                            bool isCreditCardValid = Regex.IsMatch(creditCardNumber, @"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]
                                  {14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})$");
-                                // Validate credit card number                                
-                                {
-                                    Console.WriteLine(isCreditCardValid);
+                            // Validate credit card number                                
+                            {
+                                Console.WriteLine(isCreditCardValid);
 
-                                }
+                            }
 
-                                // Get expiration date
-                                Console.Write("Enter your expiration date (MMYY): ");
-                                string expirationDate = Console.ReadLine();
+                            // Get expiration date
+                            Console.Write("Enter your expiration date (MMYY): ");
+                            string expirationDate = Console.ReadLine();
 
-                                bool isExpirationDateValid = Regex.IsMatch(expirationDate, @"^(0[1-9]|1[0-2])\/([0-9]{2})$");
-                                Console.WriteLine(isExpirationDateValid);
+                            bool isExpirationDateValid = Regex.IsMatch(expirationDate, @"^(0[1-9]|1[0-2])\/([0-9]{2})$");
+                            Console.WriteLine(isExpirationDateValid);
 
-                                // Get CVV
-                                Console.Write("Enter your CVV: ");                               
-                                string cvv = Console.ReadLine();
+                            // Get CVV
+                            Console.Write("Enter your CVV: ");
+                            string cvv = Console.ReadLine();
 
-                                bool isCVVValid = (Regex.IsMatch(cvv, @"^\d{3}$"));
-                                
-                                    Console.WriteLine("valid security code number.");
-                                
-                            if (isCreditCardValid==true || isExpirationDateValid == true || isCVVValid == true)
+                            bool isCVVValid = (Regex.IsMatch(cvv, @"^\d{3}$"));
+
+                            Console.WriteLine("valid security code number.");
+
+                            if (isCreditCardValid == true || isExpirationDateValid == true || isCVVValid == true)
                             {
                                 Console.WriteLine("Payment processed successfully.");
-                            }                               
-
-                                //Print the receipt                            
-                                // Console.WriteLine("payment was successful. Plz collect your Receipt:");                            
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
-                                Console.WriteLine();
-                                Console.WriteLine("*********************");
-                                Console.WriteLine("your sales tax is: " + salesTax);
-                                Console.WriteLine("your grand total is: " + grandTotal);
-                                Console.ResetColor();
                             }
 
+                            //Print the receipt                            
+                            // Console.WriteLine("payment was successful. Plz collect your Receipt:");                            
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
+                            Console.WriteLine();
+                            Console.WriteLine("*********************");
+                            Console.WriteLine("your sales tax is: " + salesTax);
+                            Console.WriteLine("your grand total is: " + grandTotal);
+                            Console.ResetColor();
+                        }
 
-                            else
-                                {
-                                    Console.WriteLine("Invalid payment type.");
-                                }
 
-
-                            }
-                            }
-                    
-                        
-
+                        else
+                        {
+                            Console.WriteLine("Invalid payment type.");
+                        }
 
 
                     }
                 }
-         while (!done);
-        Console.WriteLine("Thank you for shopping with us!");
+
+
+
+
+
             }
-        
+        }
+        while (!done);
+        Console.WriteLine("Thank you for shopping with us!");
     }
-    
+
+}
+
