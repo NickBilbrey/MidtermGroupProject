@@ -8,14 +8,8 @@ namespace MidTermGroupProject
 {
     public class Cart:Menu
     {
-        public decimal GetSalesTax()
-        {           
+        public List<Order> Orders = new List<Order>();
 
-           decimal taxRate = 0.06m;           
-
-            return taxRate;
-        }
-       
         public void Clear()
         {
             Items.Clear();

@@ -32,8 +32,6 @@ namespace MidTermGroupProject
             return Category;
         }
 
-       
-
 
     }
 }
