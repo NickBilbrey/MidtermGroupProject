@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
@@ -24,9 +25,12 @@ public class TakeOrders
         decimal totalTax = cart.GetSalesTax();
         bool done = false;
         decimal subtotal = 0;
+        FileOperator fileOperator = new FileOperator();
+
         int cntr = 0;        
         Credit credit = new Credit();
         string choice;
+        //string path = string.Empty;
 
 
        
@@ -34,7 +38,7 @@ public class TakeOrders
         Console.WindowHeight = 25;
 
         Random rand = new Random();
-
+        fileOperator.getFile();
 
         for (int i = 0; i < Console.WindowWidth; i++)
         {
@@ -52,14 +56,19 @@ public class TakeOrders
         Thread.Sleep(1000);
         Console.BackgroundColor = ConsoleColor.Gray;
         // cntr++;
+
+        if (cntr == 0 || cntr == 3)
+        {
+            Console.Clear();
+            menu.DisplayProductList();
+            cntr = 1;
+        }
+
+
+
         do
         {
-            if (cntr == 0 || cntr == 3)
-            {
-                Console.Clear();
-                menu.DisplayProductList();
-                cntr = 1;
-            }
+            
 
             cntr++;
 
