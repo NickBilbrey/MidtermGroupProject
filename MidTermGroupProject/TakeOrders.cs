@@ -66,13 +66,10 @@ public class TakeOrders
            
             if (int.TryParse(choice, out int productIndex))
             {
-
-                if (productIndex >= 0 && productIndex < products.Count) {
-
-                    Console.WriteLine("product number is valid");
-                }else
+                if (productIndex > products.Count || productIndex <= 0) 
                 {
-                    Console.WriteLine("product number is invalid plz re-try");
+
+                   Console.WriteLine("Menu item not available please try again");
 
                 }
 
@@ -83,18 +80,21 @@ public class TakeOrders
                     string quantityString = Console.ReadLine();
                     if (int.TryParse(quantityString, out int quantity) && quantity > 0)
                     {
+
                         products[productIndex - 1].Quantity = quantity;
                         // Add the order to the List
                         orders.Add(new Order(products[productIndex - 1], products[productIndex - 1].Quantity, products[productIndex - 1].getProductName()));
                         cart.AddItem(products[productIndex - 1], quantity);
                         Console.WriteLine("Added {0} {1} to order", quantity, products[productIndex - 1].getProductName());
 
+
+                        payment.LineTotal = products[productIndex - 1].Price * quantity;
+                        payment.Subtotal = payment.Subtotal + payment.LineTotal;
+
+                        Console.WriteLine($"Line total: ${payment.LineTotal}");
                     }
-                    payment.LineTotal = products[productIndex - 1].Price * quantity;
-                    payment.Subtotal = payment.Subtotal + payment.LineTotal;
-
-                    Console.WriteLine($"Line total: ${payment.LineTotal}");
-
+                    else
+                    { Console.WriteLine("Sorry you entered an invalid quantity"); }
                     // Ask the user if they want to continue shopping or complete the purchase
                     Console.Write("Continue shopping? (Y/N): ");
                     string continueShopping = Console.ReadLine().ToUpper();
@@ -257,6 +257,26 @@ public class TakeOrders
         }
         while (!done);
         Console.WriteLine("Thank you for shopping with us!");
+        Console.WriteLine();
+        Console.WriteLine("Do you wish to add items to the menu? (Y/N) ");
+        string addItems = Console.ReadLine().ToUpper();
+        if (addItems == "Y")
+        {
+            Console.WriteLine("Add a product: ");
+            string newProduct = Console.ReadLine();
+            Console.WriteLine("Is this a 'Food' 'Beverage' or 'Pastry'? ");
+            string newCategory = Console.ReadLine();
+            Console.WriteLine("Describe this product: ");
+            string newDescription = Console.ReadLine();
+            Console.WriteLine("Price for this product? ");
+            string newPriceString = Console.ReadLine();
+            decimal newPrice = Convert.ToDecimal(newPriceString);
+            menu.Items.Add(new Product(newProduct, newCategory, newDescription, newPrice, 0));
+
+            menu.DisplayProductList();
+
+        }
+        else { Console.WriteLine("Have a good night!"); }
     }
 
 }
