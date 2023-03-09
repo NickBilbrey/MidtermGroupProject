@@ -26,5 +26,12 @@ namespace MidTermGroupProject
         public string getProductName() {
             return Name;
         }
+
+        public string getProductCategory()
+        {
+            return Category;
+        }
+
+
     }
 }
