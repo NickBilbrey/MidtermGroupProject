@@ -9,27 +9,22 @@ using System.Text.RegularExpressions;
 
 public class TakeOrders
 {
-    static List<Order> orders = new List<Order>();
-    static decimal salesTaxRate = 0.07m;
-    static Payment payment;
-    static Cash cash;
-    static Check check;
-
-
     static void Main(string[] args)
     {
+        
         Menu menu = new Menu();
         Cart cart = new Cart();
-        List<Product> products = menu.Items;
-        decimal totalTax = cart.GetSalesTax();
-        bool done = false;
-        decimal subtotal = 0;
-        int cntr = 0;        
+        Payment payment= new Payment();
+        List<Product> products = menu.Items;            // Instantiates all classes and lists needed to function
+        List<Order> orders = new List<Order>();     
         Credit credit = new Credit();
+        Cash cash = new Cash();
+        Check check = new Check();
         string choice;
+        bool done = false;
+        int cntr = 0;
 
 
-       
         Console.WindowWidth = 50;
         Console.WindowHeight = 25;
 
@@ -93,10 +88,10 @@ public class TakeOrders
                         Console.WriteLine("Added {0} {1} to order", quantity, products[productIndex - 1].getProductName());
 
                     }
-                    decimal lineTotal = products[productIndex - 1].Price * quantity;
-                    subtotal = subtotal + lineTotal;
+                    payment.LineTotal = products[productIndex - 1].Price * quantity;
+                    payment.Subtotal = payment.Subtotal + payment.LineTotal;
 
-                    Console.WriteLine($"Line total: ${lineTotal}");
+                    Console.WriteLine($"Line total: ${payment.LineTotal}");
 
                     // Ask the user if they want to continue shopping or complete the purchase
                     Console.Write("Continue shopping? (Y/N): ");
@@ -105,9 +100,8 @@ public class TakeOrders
                     if (continueShopping != "Y")
                     {
                         done = true;
-                        decimal amountTendered;
-                        decimal salesTax = Math.Round(subtotal * salesTaxRate, 2);
-                        decimal grandTotal = Math.Round(subtotal + salesTaxRate, 2);
+                        payment.SalesTaxTotal = Math.Round(payment.Subtotal * payment.SalesTax, 2);
+                        payment.GrandTotal = Math.Round(payment.Subtotal + payment.SalesTaxTotal, 2);
 
                         Console.WriteLine("Receipt:");
 
@@ -116,10 +110,10 @@ public class TakeOrders
                             Console.WriteLine("{0} {1} ...... {2} ", Order.Quantity, Order.Name, Order.LineTotal);
                         }
                         Console.WriteLine();
-                        Console.WriteLine("Subtotal:    " + subtotal);
-                        Console.WriteLine("Sales Tax:   " + salesTax);
+                        Console.WriteLine("Subtotal:    " + payment.Subtotal);
+                        Console.WriteLine("Sales Tax:   " + payment.SalesTaxTotal);
                         Console.WriteLine("--------------------------");
-                        Console.WriteLine("Grand Total: " + grandTotal);
+                        Console.WriteLine("Grand Total: " + payment.GrandTotal);
 
                         // Ask the user for the payment type
                         Console.Write("Enter payment type (Cash/Credit/Check): ");
@@ -136,20 +130,26 @@ public class TakeOrders
 
                                 // Ask the user for the amount tendered
                                 Console.Write("Enter amount tendered: ");
-                                amountTendered = decimal.Parse(Console.ReadLine());
-                                if (amountTendered < grandTotal)
+                                cash.AmountTendered = decimal.Parse(Console.ReadLine());
+                                if (cash.AmountTendered < payment.GrandTotal)
                                 {
                                     Console.WriteLine("please give the full amount you owe.");
                                     fullAmount = true;
                                 }
                                 else
                                 {
+                                    cash.CustomerChange = cash.AmountTendered - payment.GrandTotal;
                                     fullAmount = false;
+                                    
                                 }
+
                             } while (fullAmount == true);
 
+                            
 
-                            decimal change = amountTendered - grandTotal;
+
+                            
+                            
                             //to do : add all the items that were ordered in receipt
                             Console.ForegroundColor = ConsoleColor.Blue;
                             //  Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
@@ -157,8 +157,8 @@ public class TakeOrders
                             Console.WriteLine("*********************");
                             //  Console.WriteLine("your sales tax is: "+ salesTax);
                             Console.WriteLine($"Payment Type: Cash");
-                            Console.WriteLine($"Amount Tendered: ${amountTendered}");
-                            Console.WriteLine($"Change: ${change}");
+                            Console.WriteLine($"Amount Tendered: ${cash.AmountTendered}");
+                            Console.WriteLine($"Change: ${cash.CustomerChange}");
                             Console.WriteLine();
                             Console.WriteLine();
                             //  Console.WriteLine("your grand total is: " + grandTotal);
@@ -168,26 +168,24 @@ public class TakeOrders
                         //Handle check payment
                         else if (paymentType == "CHECK")
                         {
-                            try
+
+                            do
                             {
-                                //We used Regex expressions to validate the check number.if always 9 digits are required
+                                Console.Write("Please enter a check number. The number should be 9 digits long: ");
+                                check.CheckNumber = Console.ReadLine();
+                                Console.WriteLine("The number is: " + check.CheckNumber);
 
-                                Console.Write("Please enter a check number. The number should be between 1 to 9 digits long: ");
-                                string pattern = @"^[1-9][0-9]{8}$";
-                                string inputValue = Console.ReadLine();
-                                Console.WriteLine("The number is: " + inputValue);
-
-                                if (Regex.IsMatch(inputValue, pattern))
+                                if (check.ValidCheck() == true)
                                 {
-                                    Console.WriteLine("valid check number.");
+                                    Console.WriteLine("Check processed successfully."); // If check number is valid, continue with process
                                 }
-                                // If check number is valid, continue with process
-                                Console.WriteLine("Check processed successfully.");
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex.Message);
-                            }
+                                else if (check.ValidCheck() == false)
+                                {
+                                    Console.WriteLine("Please enter a valid check number");
+                                }
+                                
+
+                            } while (check.ValidCheck() == false);
 
 
                             //Print the receipt                            
@@ -197,7 +195,7 @@ public class TakeOrders
                             Console.WriteLine();
                             Console.WriteLine("*********************");
                             //  Console.WriteLine("your sales tax is: " + salesTax);                            
-                            Console.WriteLine("your grand total is: " + grandTotal);
+                            Console.WriteLine("your grand total is: " + payment.GrandTotal);
                             Console.ResetColor();
 
                         }
@@ -242,8 +240,8 @@ public class TakeOrders
                             Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
                             Console.WriteLine();
                             Console.WriteLine("*********************");
-                            Console.WriteLine("your sales tax is: " + salesTax);
-                            Console.WriteLine("your grand total is: " + grandTotal);
+                            Console.WriteLine("your sales tax is: " + payment.SalesTaxTotal);
+                            Console.WriteLine("your grand total is: " + payment.GrandTotal);
                             Console.ResetColor();
                         }
 
