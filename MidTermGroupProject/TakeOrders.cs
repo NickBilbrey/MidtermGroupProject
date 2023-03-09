@@ -136,11 +136,11 @@ public class TakeOrders
                                 {
                                     fullAmount = false;
                                 }
-<<<<<<< HEAD
+
                             } while (fullAmount == false);
-=======
-                            } while (fullAmount == true);
->>>>>>> f5dbf1861d9ec7f00c5398b7d18ce97f248854be
+
+                            
+
 
 
                             decimal change = amountTendered - grandTotal;
