@@ -174,10 +174,13 @@ public class TakeOrders
                                 // Get credit card number
                                 Console.Write("Enter your credit card number: ");
                                 credit.CreditCardNumber = Console.ReadLine();
+
                                 Console.Write("Enter your expiration date (MMYY): ");
                                 credit.ExpirationDate = Console.ReadLine();
+
                                 Console.Write("Enter your CVV: ");
                                 credit.CVV = Console.ReadLine();
+
                                 if (credit.IsCardNumberValid() == true || credit.IsExpirationDateValid() == true || credit.IsCvvValid() == true)
                                 {
                                     Console.WriteLine("Payment processed successfully.");
@@ -188,8 +191,9 @@ public class TakeOrders
                                     Console.WriteLine("Please enter valid Credit Card Info");
                                 }
                             } while (validEntry == false);
-                            //Print the receipt
-                            // Console.WriteLine("payment was successful. Plz collect your Receipt:");
+
+                            //Print the receipt                            
+                            // Console.WriteLine("payment was successful. Plz collect your Receipt:");                            
                             Console.ForegroundColor = ConsoleColor.Blue;
                             Console.WriteLine("*******You ordered the items {0} {1}*********", quantity, products[productIndex - 1].getProductName());
                             Console.WriteLine();
