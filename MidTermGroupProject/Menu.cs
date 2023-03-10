@@ -28,35 +28,6 @@ namespace MidTermGroupProject
             Items.Add(new Product("Salad", "Food", "Mixed greens with balsamic vinaigrette", 5.00m, 0));
             Items.Add(new Product("Fruit Cup", "Food", "Assorted seasonal fruit", 3.50m, 0));
             Items.Add(new Product("Yogurt Parfait", "Food", "Greek yogurt with granola and berries", 4.50m, 0));
-            
-
-
-            if (!File.Exists(path))
-            {
-                // Create a file to write to.
-                using (StreamWriter sw = File.CreateText(@"C:\Temp\menu1.txt"))
-                {
-                    foreach (Product prod in Items)
-                    {
-                        sw.WriteLine($"{prod.Name},'||',{prod.Category},'||',{prod.Description},'||',{prod.Price},'||',{prod.Quantity}");                        
-
-                    }
-
-                }
-            }
-
-            // Open the file to read from.
-            using (StreamReader sr = File.OpenText(@"C:\Temp\menu1.txt"))
-            {
-                string s;
-                while ((s = sr.ReadLine()) != null)
-                {
-                    Console.WriteLine(s);
-                    
-                }
-
-            }
-
 
         }
         public void DisplayProductList()
