@@ -13,7 +13,6 @@ namespace MidTermGroupProject
 
         public Menu()
         {
-            string path = string.Empty;
 
             // Populate the product list
             Items.Add(new Product("Coffee", "Beverage", "Regular coffee", 2.00m, 0));
@@ -30,16 +29,6 @@ namespace MidTermGroupProject
             Items.Add(new Product("Yogurt Parfait", "Food", "Greek yogurt with granola and berries", 4.50m, 0));
 
         }
-        public void DisplayProductList()
-        {
-            for (int i = 0; i < Items.Count; i++)
-            {
-                Console.WriteLine("{0}. {1} ({2}) - {3:C}", i + 1, Items[i].Name, Items[i].Category, Items[i].Price);
-            }
-                     
-        }
-
-
 
     }
 }
