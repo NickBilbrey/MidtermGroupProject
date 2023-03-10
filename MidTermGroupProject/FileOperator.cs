@@ -30,7 +30,7 @@ namespace MidTermGroupProject
 
                     //using (StreamWriter writer = new StreamWriter(@"C:\Temp\menu1.txt", true))
                     //{
-                    sw.WriteLine($"Danish,'||',dessert,'||',yummy,'||',1.22,'||',4");
+                    // sw.WriteLine($"Danish,'||',dessert,'||',yummy,'||',1.22,'||',4");
 
                     //}
                     sw.Flush();
@@ -51,6 +51,28 @@ namespace MidTermGroupProject
                 }
 
             }
+        }
+
+        // possible solution to add to text file
+        public void addToFile(string name, string category, string description, decimal price, int quantity ) 
+        {
+            quantity = 0;
+
+            using (StreamWriter sw = File.CreateText(@"C:\Temp\menu1.txt"))
+            {
+                foreach (Product prod in products)
+                {
+                    sw.WriteLine($"{prod.Name},'||',{prod.Category},'||',{prod.Description},'||',{prod.Price},'||',{prod.Quantity}");
+
+                }
+
+
+                sw.WriteLine($"{name},'||',{category},'||',{description},'||',{price},'||',{quantity}");
+
+                
+                sw.Flush();
+            }
+
         }
 
     }
