@@ -28,6 +28,13 @@ namespace MidTermGroupProject
 
                     }
 
+
+                    //using (StreamWriter writer = new StreamWriter(@"C:\Temp\menu1.txt", true))
+                    //{
+                    // sw.WriteLine($"Danish,'||',dessert,'||',yummy,'||',1.22,'||',4");
+
+                    //}
+
                     sw.Flush();
                 }
             }

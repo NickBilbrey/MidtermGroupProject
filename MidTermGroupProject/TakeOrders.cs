@@ -10,7 +10,56 @@ public class TakeOrders
 {
     static void Main(string[] args)
     {
+
         string makeNewOrder = "";
+
+
+        Menu menu = new Menu();
+        Cart cart = new Cart();
+        Payment payment = new Payment();
+        List<Product> products = menu.Items;            // Instantiates all classes and lists needed to function
+        List<Order> orders = new List<Order>();
+        FileOperator fileOperator = new FileOperator();
+        Credit credit = new Credit();
+        Cash cash = new Cash();
+        Check check = new Check();
+        string choice;
+        bool done = false;
+        int cntr = 0;
+
+        Console.WindowWidth = 75;      
+        Console.WindowHeight = 25;
+        Random rand = new Random();
+        fileOperator.getFile();
+
+        using (StreamReader sr = File.OpenText(@"C:\Temp\menu1.txt"))       // moved this to display the menu only once from text file
+        {
+            string s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                Console.WriteLine(s);
+
+            }
+
+        }
+
+        for (int i = 0; i < Console.WindowWidth; i++)
+        {
+            int height = rand.Next(Console.WindowHeight);
+            Console.SetCursorPosition(i, height);
+            Console.Write("*");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Thread.Sleep(40);
+
+        }
+        Console.Clear();
+        Console.BackgroundColor = ConsoleColor.Cyan;
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("****************** Welcome to the AJN coffee shop! Please select an item*****************:");
+        Thread.Sleep(1000);
+        Console.BackgroundColor = ConsoleColor.Gray;
+        // cntr++;
 
         do
         { 
@@ -45,6 +94,7 @@ public class TakeOrders
 
             for (int i = 0; i < Console.WindowWidth; i++)
             {
+
                 int height = rand.Next(Console.WindowHeight);
                 Console.SetCursorPosition(i, height);
                 Console.Write("*");
@@ -53,6 +103,12 @@ public class TakeOrders
                 Thread.Sleep(40);
 
             }
+
+                if (productIndex > products.Count || productIndex <= 0)
+                {
+
+                    Console.WriteLine("Menu item not available please try again");
+
 
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.Cyan;
@@ -275,8 +331,13 @@ public class TakeOrders
             string newPriceString = Console.ReadLine();
 
             decimal newPrice = Convert.ToDecimal(newPriceString);
+
             menu2.Items.Add(new Product(newProduct, newCategory, newDescription, newPrice, 0));
             fileOperator1.addToFile(newProduct, newCategory, newDescription, newPrice, 0);
+
+            menu.Items.Add(new Product(newProduct, newCategory, newDescription, newPrice, 0));
+            fileOperator.addToFile(newProduct, newCategory, newDescription, newPrice, 0);
+
 
             for (int i = 0; i < products1.Count; i++)
             {
