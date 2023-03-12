@@ -1,15 +1,15 @@
 ﻿using MidTermGroupProject;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
+using System.Media;
+
 public class TakeOrders
+
 {
     static void Main(string[] args)
     {
+        SoundPlayer spooky= new SoundPlayer("file_example_WAV_1MG.wav");
+        spooky.Load();
+        spooky.Play();        
+
         Menu menu = new Menu();
         Cart cart = new Cart();
         Payment payment = new Payment();
@@ -23,10 +23,21 @@ public class TakeOrders
         bool done = false;
         int cntr = 0;
 
-        Console.WindowWidth = 50;
+        Console.WindowWidth = 75;      
         Console.WindowHeight = 25;
         Random rand = new Random();
         fileOperator.getFile();
+
+        using (StreamReader sr = File.OpenText(@"C:\Temp\menu1.txt"))       // moved this to display the menu only once from text file
+        {
+            string s;
+            while ((s = sr.ReadLine()) != null)
+            {
+                Console.WriteLine(s);
+
+            }
+
+        }
 
         for (int i = 0; i < Console.WindowWidth; i++)
         {
@@ -36,6 +47,7 @@ public class TakeOrders
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BackgroundColor = ConsoleColor.Black;
             Thread.Sleep(40);
+
         }
         Console.Clear();
         Console.BackgroundColor = ConsoleColor.Cyan;
@@ -59,10 +71,10 @@ public class TakeOrders
             choice = Console.ReadLine();
             if (int.TryParse(choice, out int productIndex))
             {
-                if (productIndex > products.Count || productIndex <= 0) 
+                if (productIndex > products.Count || productIndex <= 0)
                 {
 
-                   Console.WriteLine("Menu item not available please try again");
+                    Console.WriteLine("Menu item not available please try again");
 
                 }
                 if (productIndex >= 1 && productIndex <= products.Count)
@@ -231,6 +243,7 @@ public class TakeOrders
             string newPriceString = Console.ReadLine();
             decimal newPrice = Convert.ToDecimal(newPriceString);
             menu.Items.Add(new Product(newProduct, newCategory, newDescription, newPrice, 0));
+            fileOperator.addToFile(newProduct, newCategory, newDescription, newPrice, 0);
 
             menu.DisplayProductList();
 
