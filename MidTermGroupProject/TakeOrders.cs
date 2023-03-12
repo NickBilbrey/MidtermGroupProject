@@ -1,68 +1,18 @@
 ﻿using MidTermGroupProject;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
+using System.Media;
+
 public class TakeOrders
 {
     static void Main(string[] args)
     {
+        SoundPlayer spooky = new SoundPlayer("file_example_WAV_1MG.wav");
+        spooky.Load();
+        spooky.Play();
 
         string makeNewOrder = "";
 
-
-        Menu menu = new Menu();
-        Cart cart = new Cart();
-        Payment payment = new Payment();
-        List<Product> products = menu.Items;            // Instantiates all classes and lists needed to function
-        List<Order> orders = new List<Order>();
-        FileOperator fileOperator = new FileOperator();
-        Credit credit = new Credit();
-        Cash cash = new Cash();
-        Check check = new Check();
-        string choice;
-        bool done = false;
-        int cntr = 0;
-
-        Console.WindowWidth = 75;      
-        Console.WindowHeight = 25;
-        Random rand = new Random();
-        fileOperator.getFile();
-
-        using (StreamReader sr = File.OpenText(@"C:\Temp\menu1.txt"))       // moved this to display the menu only once from text file
-        {
-            string s;
-            while ((s = sr.ReadLine()) != null)
-            {
-                Console.WriteLine(s);
-
-            }
-
-        }
-
-        for (int i = 0; i < Console.WindowWidth; i++)
-        {
-            int height = rand.Next(Console.WindowHeight);
-            Console.SetCursorPosition(i, height);
-            Console.Write("*");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.BackgroundColor = ConsoleColor.Black;
-            Thread.Sleep(40);
-
-        }
-        Console.Clear();
-        Console.BackgroundColor = ConsoleColor.Cyan;
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("****************** Welcome to the AJN coffee shop! Please select an item*****************:");
-        Thread.Sleep(1000);
-        Console.BackgroundColor = ConsoleColor.Gray;
-        // cntr++;
-
         do
-        { 
+        {
             Menu menu = new Menu();
             Cart cart = new Cart();
             Payment payment = new Payment();
@@ -76,7 +26,7 @@ public class TakeOrders
             bool done = false;
             int cntr = 0;
 
-            Console.WindowWidth = 75;      
+            Console.WindowWidth = 75;
             Console.WindowHeight = 25;
             Random rand = new Random();
             fileOperator.getFile();
@@ -94,7 +44,6 @@ public class TakeOrders
 
             for (int i = 0; i < Console.WindowWidth; i++)
             {
-
                 int height = rand.Next(Console.WindowHeight);
                 Console.SetCursorPosition(i, height);
                 Console.Write("*");
@@ -103,12 +52,6 @@ public class TakeOrders
                 Thread.Sleep(40);
 
             }
-
-                if (productIndex > products.Count || productIndex <= 0)
-                {
-
-                    Console.WriteLine("Menu item not available please try again");
-
 
             Console.Clear();
             Console.BackgroundColor = ConsoleColor.Cyan;
@@ -162,9 +105,9 @@ public class TakeOrders
                             Console.WriteLine($"Line total: ${payment.LineTotal}");
                         }
                         else
-                        { 
-                            Console.WriteLine("Sorry you entered an invalid quantity"); 
-                        
+                        {
+                            Console.WriteLine("Sorry you entered an invalid quantity");
+
                         }
                         // Ask the user if they want to continue shopping or complete the purchase
                         Console.Write("Continue shopping? (Y/N): ");
@@ -331,13 +274,8 @@ public class TakeOrders
             string newPriceString = Console.ReadLine();
 
             decimal newPrice = Convert.ToDecimal(newPriceString);
-
             menu2.Items.Add(new Product(newProduct, newCategory, newDescription, newPrice, 0));
             fileOperator1.addToFile(newProduct, newCategory, newDescription, newPrice, 0);
-
-            menu.Items.Add(new Product(newProduct, newCategory, newDescription, newPrice, 0));
-            fileOperator.addToFile(newProduct, newCategory, newDescription, newPrice, 0);
-
 
             for (int i = 0; i < products1.Count; i++)
             {
@@ -348,3 +286,4 @@ public class TakeOrders
         else { Console.WriteLine("Have a good night!"); }
     }
 }
+

@@ -11,11 +11,12 @@ namespace MidTermGroupProject
         List<Product> products = new Menu().Items;
         string path = string.Empty;
 
-        public FileOperator() {}
+        public FileOperator() { }
 
-       
 
-        public void getFile() {
+
+        public void getFile()
+        {
 
             if (!File.Exists(path))
             {
@@ -28,19 +29,13 @@ namespace MidTermGroupProject
 
                     }
 
-
-                    //using (StreamWriter writer = new StreamWriter(@"C:\Temp\menu1.txt", true))
-                    //{
-                    // sw.WriteLine($"Danish,'||',dessert,'||',yummy,'||',1.22,'||',4");
-
-                    //}
-
                     sw.Flush();
                 }
             }
         }
 
-        public void openFile() {
+        public void openFile()
+        {
 
             // Open the file to read from.
             using (StreamReader sr = File.OpenText(@"C:\Temp\menu1.txt"))
@@ -56,7 +51,7 @@ namespace MidTermGroupProject
         }
 
         // possible solution to add to text file
-        public void addToFile(string name, string category, string description, decimal price, int quantity ) 
+        public void addToFile(string name, string category, string description, decimal price, int quantity)
         {
             quantity = 0;
 
@@ -71,7 +66,7 @@ namespace MidTermGroupProject
 
                 sw.WriteLine($"{name},'||',{category},'||',{description},'||',{price},'||',{quantity}");
 
-                
+
                 sw.Flush();
             }
 
