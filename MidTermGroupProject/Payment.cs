@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MidTermGroupProject
 {
-    public class Payment // Abstract parent class of the payment methods
+    public class Payment // parent class of the payment methods
     {
         public decimal Subtotal { get; set; } // Every payment method must return both Subtotal, Sales Tax, and Total
         public decimal LineTotal { get; set; }
